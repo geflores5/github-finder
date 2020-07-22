@@ -8,6 +8,8 @@ export class Search extends Component {
 
   static propTypes = {
     searchUsers: PropTypes.func.isRequired,
+    clearUsers: PropTypes.func.isRequired,
+    showClear: PropTypes.bool.isRequired,
   };
 
   onChange = (e) => {
@@ -18,6 +20,10 @@ export class Search extends Component {
     e.preventDefault();
     this.props.searchUsers(this.state.text);
     this.setState({ text: '' });
+  };
+
+  onClick = () => {
+    this.props.clearUsers();
   };
 
   render() {
@@ -37,6 +43,11 @@ export class Search extends Component {
             className='btn btn-dark btn-block'
           />
         </form>
+        {this.props.showClear && (
+          <button className='btn btn-light btn-block' onClick={this.onClick}>
+            Clear
+          </button>
+        )}
       </div>
     );
   }
