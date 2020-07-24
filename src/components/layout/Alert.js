@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import GithubContext from '../../context/github/GithubContext';
 
-const Alert = ({ alert }) => {
+const Alert = () => {
+  const githubContext = useContext(GithubContext);
+  const alert = githubContext.alert;
   return (
     alert !== null && (
       <div className={`alert alert-${alert.type}`}>
