@@ -1,15 +1,20 @@
 import React, { Fragment, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import GithubContext from '../../context/github/GithubContext';
+import Context from '../../context/Context';
+import { getUserAndRepos } from '../../context/actions';
 import Repos from '../repos/Repos';
 import Spinner from '../layout/Spinner';
 
 const User = ({ match }) => {
-  const githubContext = useContext(GithubContext);
+  const { loading, repos, dispatch, user } = useContext(Context);
 
   useEffect(() => {
-    githubContext.getUser(match.params.login);
-    githubContext.getUserRepos(match.params.login);
+    const getUserInfo = async () => {
+      dispatch({ type: 'SET_LOADING' });
+      const userInfo = await getUserAndRepos(match.params.login);
+      dispatch({ type: 'GET_USER_INFO', payload: userInfo });
+    };
+    getUserInfo();
     // eslint-disable-next-line
   }, []);
 
@@ -27,9 +32,9 @@ const User = ({ match }) => {
     public_repos,
     public_gists,
     hireable,
-  } = githubContext.user;
+  } = user;
 
-  if (githubContext.loading) {
+  if (loading) {
     return <Spinner />;
   }
 
@@ -101,7 +106,7 @@ const User = ({ match }) => {
         <div className='badge badge-danger'>Public Repos: {public_repos}</div>
         <div className='badge badge-dark'>Public Gists: {public_gists}</div>
       </div>
-      <Repos repos={githubContext.repos} />
+      <Repos repos={repos} />
     </div>
   );
 };

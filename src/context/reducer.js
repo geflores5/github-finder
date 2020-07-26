@@ -8,15 +8,11 @@ export default (state, action) => {
         showClear: true,
         alert: null,
       };
-    case 'GET_USER':
+    case 'GET_USER_INFO':
       return {
         ...state,
-        user: action.payload,
-      };
-    case 'GET_REPOS':
-      return {
-        ...state,
-        repos: action.payload,
+        user: action.payload.user,
+        repos: action.payload.repos,
         loading: false,
       };
     case 'SET_ALERT':

@@ -1,26 +1,33 @@
-import React, { useContext, useState } from 'react';
-import GithubContext from '../../context/github/GithubContext';
+import React, { useState, useContext } from 'react';
+import Context from '../../context/Context';
+import { setAlert, searchUsers } from '../../context/actions';
 
-const Search = ({ showAlert }) => {
-  const githubContext = useContext(GithubContext);
+const Search = () => {
+  const { showClear, dispatch } = useContext(Context);
   const [text, setText] = useState('');
 
   const onChange = (e) => {
     setText(e.target.value);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (text === '') {
-      githubContext.showAlert('Please enter something', 'light');
+      const alert = await setAlert('Please enter something', 'light');
+      dispatch({ type: 'SET_ALERT', payload: alert });
     } else {
-      githubContext.searchUsers(text);
+      dispatch({ type: 'SET_LOADING' });
+      const searchedUsers = await searchUsers(text);
+      dispatch({
+        type: 'SEARCH_USERS',
+        payload: searchedUsers,
+      });
       setText('');
     }
   };
 
   const onClick = () => {
-    githubContext.clearUsers();
+    dispatch({ type: 'CLEAR_USERS' });
   };
 
   return (
@@ -39,7 +46,7 @@ const Search = ({ showAlert }) => {
           className='btn btn-dark btn-block'
         />
       </form>
-      {githubContext.showClear && (
+      {showClear && (
         <button className='btn btn-light btn-block' onClick={onClick}>
           Clear
         </button>
