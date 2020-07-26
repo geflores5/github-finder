@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-let githubAuthorization;
-
 const github = axios.create({
   baseURL: 'https://api.github.com',
   timeout: 1000,
